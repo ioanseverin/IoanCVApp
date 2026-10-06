@@ -288,7 +288,7 @@ As a recruiter or technical visitor, I want a concise About page with Ioan's pro
 ### Technical Notes
 - The “Built with AI” content is static frontend content per the PRD, not admin-editable.
 - Resume asset path should be deployment-safe and the link should remain keyboard accessible.
-- The GitHub repository URL is static frontend configuration (created in ST-00), not admin-editable or database-backed.
+- The GitHub repository URL (https://github.com/ioanseverin/IoanCVApp, created in ST-00) is static frontend configuration, not admin-editable or database-backed.
 
 ### Dependencies
 - Blocked by: ST-02, ST-08
