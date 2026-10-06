@@ -1,0 +1,28 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+TestResults/
+# Node
+node_modules/
+dist/
+build/
+npm-debug.log*
+# IDE
+.idea/
+.vscode/
+# Local databases
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+# Local secrets
+.env
+.env.*
+appsettings.Development.json
+appsettings.Local.json
+secrets.json
+*.pfx
