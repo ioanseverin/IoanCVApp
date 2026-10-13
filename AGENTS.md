@@ -1,5 +1,11 @@
 # Agent Instructions
 
+### Workflow
+
+- For planning a feature, story, or change, always use the `plan` skill (`.agents/skills/plan/SKILL.md`); save plans to `.agents/plans/`. This applies in plan mode too: follow the skill and save the plan in the repository, not only in the session.
+- For implementing a plan or an approved story, always use the `implement` skill (`.agents/skills/implement/SKILL.md`), including its branch, validation, and Jira steps.
+- Load the skill before starting the work, not after.
+
 ### Committing
 
 - Favor minimal explanatory comments in code; avoid verbose inline comments.
