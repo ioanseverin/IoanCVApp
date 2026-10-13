@@ -12,16 +12,41 @@ Personal CV / portfolio website.
 ```
 .agents/PRDs/      Product requirements (PRD.md)
 .agents/stories/   User stories derived from the PRD (PRD-stories.md)
+.agents/skills/    Copilot/agent skills (plan, implement, dotnet-webapi)
 .claude/commands/  AI workflow commands
+backend/           ASP.NET Core solution (IoanCvApp.sln)
 mcp.json           MCP server configuration (Atlassian, browser OAuth - no secrets)
 ```
 
-Planned (created from ST-01 onward):
+Backend layout (`backend/`):
 
 ```
-src/             ASP.NET Core API
-tests/           Backend tests
+src/IoanCvApp.Domain          Entities (Profile, ExperienceEntry, Project)
+src/IoanCvApp.Application     DTOs, mapping, repository abstractions
+src/IoanCvApp.Infrastructure  EF Core SQLite DbContext, migrations, repositories
+src/IoanCvApp.Api            ASP.NET Core host (composition root)
+tests/IoanCvApp.Api.Tests     xUnit tests
+```
+
+Planned:
+
+```
 frontend/        React app
+```
+
+## Backend
+
+```
+dotnet restore backend/IoanCvApp.sln
+dotnet build backend/IoanCvApp.sln
+dotnet test backend/IoanCvApp.sln
+```
+
+The API uses a local SQLite file (`ConnectionStrings:Default`, default `ioancvapp.db`). Add a migration with the local tool:
+
+```
+dotnet tool restore
+dotnet tool run dotnet-ef migrations add <Name> --project backend/src/IoanCvApp.Infrastructure --startup-project backend/src/IoanCvApp.Api --output-dir Persistence/Migrations
 ```
 
 ## Getting started
