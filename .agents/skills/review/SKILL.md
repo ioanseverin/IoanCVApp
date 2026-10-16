@@ -56,18 +56,16 @@ For each finding, include:
 
 Use the smallest useful line range. If no actionable issues are found, say so clearly and mention the scope reviewed; do not invent findings to fill a report.
 
-## Phase 4: Run Relevant Checks
+## Phase 4: Validation
 
-Run checks only when they provide meaningful evidence for the reviewed changes. Prefer checks already configured by the repository and the narrowest relevant command. For .NET projects, typical commands are:
+Use the `validate` skill (`.agents/skills/validate/SKILL.md`) as the source of truth for choosing, running, and reporting repository validation checks. This phase is review-specific:
 
-```powershell
-dotnet restore <solution-or-project>
-dotnet format <solution-or-project> --verify-no-changes
-dotnet build <solution-or-project> --no-restore
-dotnet test <test-project-or-solution> --no-build
-```
-
-Use actual paths and applicable checks; do not run every example blindly. If a check is unavailable, too broad, or fails because of an unrelated baseline issue, record that accurately. Do not modify files to make checks pass. Frontend checks are applicable only when the reviewed scope includes frontend code.
+- Select checks that provide meaningful evidence for the changed code; do not run examples blindly.
+- Use the actual solution/project paths and repository-configured commands.
+- Run frontend checks only when the reviewed scope includes frontend code.
+- Record commands, outcomes, and relevant diagnostics in the review report. Distinguish changed-code failures from unrelated baseline failures.
+- If a build fails, do not treat `--no-build` test results from existing binaries as validation of the current source.
+- Do not modify files to make validation pass. Report unavailable or skipped checks and why.
 
 ## Phase 5: Report
 
