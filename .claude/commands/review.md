@@ -1,6 +1,6 @@
 ---
-description: Review .NET pull requests, diffs, files, folders, or implementation scopes for concrete correctness and reliability issues
-argument-hint: "[PR number|file|folder|scope]"
+description: Review .NET Jira tickets, pull requests, diffs, files, folders, or implementation scopes for concrete correctness and reliability issues
+argument-hint: "[Jira ticket key or PR number|file|folder|scope]"
 ---
 
 # .NET Code Review
@@ -17,6 +17,7 @@ Supported scopes:
 
 | Input | Action |
 |---|---|
+| Jira ticket key or URL | Retrieve the issue from Jira, identify its implementation scope, and inspect the related code changes. |
 | Pull request number or URL | Use `gh` to inspect PR metadata and diff for the current repository. For another repository, confirm its owner/name from the URL before using qualified `gh` commands. |
 | Commit, branch, or range | Inspect the requested commit/range and its parent/base. |
 | File or folder | Read the requested files and enough callers/tests/context to assess behavior. |
@@ -26,11 +27,13 @@ Do not assume a PR, branch, or diff base. If the requested scope cannot be resol
 
 ## Phase 2: Load Context
 
-1. Read `AGENTS.md`, relevant nearer instructions, and applicable plans or acceptance criteria when available.
-2. Read the diff and understand intent before evaluating implementation.
-3. Inspect relevant `.sln`/`.slnx`, `.csproj`, package/version configuration, adjacent code, callers, and tests as needed.
-4. Follow the architecture already used by the repository. For ASP.NET Core endpoints, apply the `dotnet-webapi` skill when relevant. For validation commands, apply the `validate` skill where available.
-5. Keep the review within scope. Do not broaden it into a general audit or report unrelated pre-existing defects.
+1. Read `AGENTS.md` and relevant nearer instructions.
+2. Load the applicable plan explicitly. Search `.agents/plans/` for a plan matching the Jira ticket, PR, or implementation scope, and read it when present. If no matching plan exists, note that in the review report.
+3. Load the Jira story explicitly. For a Jira ticket key or URL, retrieve that issue using the Jira issue retrieval tool and read its description and acceptance criteria. For a pull request, inspect its title, description, branch, commits, and linked issues to identify the associated Jira key, then retrieve that Jira issue. If no Jira issue is associated, or Jira cannot be accessed, note that limitation; do not infer requirements or claim to have reviewed an issue that was not loaded.
+4. Read the diff and understand intent before evaluating implementation. Compare the implementation with the loaded plan and Jira story, including the description and acceptance criteria. Treat them as requirements context, account for approved changes, and report concrete omissions or deviations. If the plan and story conflict or either appears outdated, call out the discrepancy instead of silently choosing one.
+5. Inspect relevant `.sln`/`.slnx`, `.csproj`, package/version configuration, adjacent code, callers, and tests as needed.
+6. Follow the architecture already used by the repository. For ASP.NET Core endpoints, apply the `dotnet-webapi` skill when relevant. For validation commands, apply the `validate` skill where available.
+7. Keep the review within scope. Do not broaden it into a general audit or report unrelated pre-existing defects.
 
 ## Phase 3: Review for Defects
 
