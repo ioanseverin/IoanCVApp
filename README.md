@@ -1,58 +1,72 @@
 # IoanCVApp
 
-Personal CV / portfolio website.
+Personal CV and portfolio website. The backend foundation is implemented; the frontend and hosting are planned.
 
-- **Backend:** ASP.NET Core 9 Web API
-- **Frontend:** React
-- **Database:** SQLite
-- **Hosting:** Azure free tier
+- **Backend:** ASP.NET Core 9, with Domain, Application, and Infrastructure projects
+- **Persistence:** Entity Framework Core 9 with SQLite
+- **Planned frontend:** React
+- **Planned hosting:** Azure free tier
 
 ## Repository structure
 
-```
+```text
 .agents/PRDs/      Product requirements (PRD.md)
 .agents/stories/   User stories derived from the PRD (PRD-stories.md)
-.agents/skills/    Copilot/agent skills (plan, implement, dotnet-webapi)
-.claude/commands/  AI workflow commands
-backend/           ASP.NET Core solution (IoanCvApp.sln)
-mcp.json           MCP server configuration (Atlassian, browser OAuth - no secrets)
+.agents/plans/     Implementation plans
+.agents/skills/    Copilot agent skills
+.claude/commands/  Claude workflow commands
+.claude/skills/    Claude skills
+backend/           .NET solution, source projects, and tests
+mcp.json           MCP server configuration (contains no credentials)
 ```
 
 Backend layout (`backend/`):
 
-```
-src/IoanCvApp.Domain          Entities (Profile, ExperienceEntry, Project)
-src/IoanCvApp.Application     DTOs, mapping, repository abstractions
-src/IoanCvApp.Infrastructure  EF Core SQLite DbContext, migrations, repositories
-src/IoanCvApp.Api            ASP.NET Core host (composition root)
-tests/IoanCvApp.Api.Tests     xUnit tests
-```
-
-Planned:
-
-```
-frontend/        React app
+```text
+src/IoanCvApp.Api            ASP.NET Core host and composition root
+src/IoanCvApp.Application    DTOs, mappings, and repository abstractions
+src/IoanCvApp.Domain         Profile, experience, and project entities
+src/IoanCvApp.Infrastructure EF Core SQLite persistence and migrations
+tests/IoanCvApp.Api.Tests    xUnit persistence tests
 ```
 
-## Backend
+## Requirements
 
-```
+- .NET 9 SDK. The repository's `global.json` selects SDK 9.0.203 and allows compatible later feature-band versions.
+
+## Run and test the backend
+
+From the repository root:
+
+```sh
 dotnet restore backend/IoanCvApp.sln
-dotnet build backend/IoanCvApp.sln
-dotnet test backend/IoanCvApp.sln
+dotnet build backend/IoanCvApp.sln --no-restore
+dotnet test backend/IoanCvApp.sln --no-build
 ```
 
-The API uses a local SQLite file (`ConnectionStrings:Default`, default `ioancvapp.db`). Add a migration with the local tool:
+Run the API:
 
+```sh
+dotnet run --project backend/src/IoanCvApp.Api
 ```
+
+The API currently provides the application host and persistence wiring; content CRUD endpoints have not been implemented yet.
+
+## SQLite database and migrations
+
+The connection string is configured as `ConnectionStrings:Default` in `backend/src/IoanCvApp.Api/appsettings.json`, with `Data Source=ioancvapp.db` by default. The database file is local and ignored by Git.
+
+Restore the repository's local EF Core tool and apply migrations:
+
+```sh
 dotnet tool restore
+dotnet tool run dotnet-ef database update --project backend/src/IoanCvApp.Infrastructure --startup-project backend/src/IoanCvApp.Api
+```
+
+Create a migration after changing the persistence model:
+
+```sh
 dotnet tool run dotnet-ef migrations add <Name> --project backend/src/IoanCvApp.Infrastructure --startup-project backend/src/IoanCvApp.Api --output-dir Persistence/Migrations
 ```
 
-## Getting started
-
-```
-git clone https://github.com/ioanseverin/IoanCVApp.git
-```
-
-See `.agents/PRDs/PRD.md` for scope and phases, and `.agents/stories/PRD-stories.md` for the story breakdown.
+See `.agents/PRDs/PRD.md` for product scope and phases, and `.agents/stories/PRD-stories.md` for the story breakdown.
