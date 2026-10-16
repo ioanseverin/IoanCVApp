@@ -7,6 +7,17 @@
 - For validation-only requests, use the `validate` skill (`.agents/skills/validate/SKILL.md`) to select and report repository-appropriate checks. During implementation, follow the validation steps in `implement`.
 - Load the skill before starting the work, not after.
 
+### Pull Request Creation
+
+- Target `main` unless the Jira story or repository workflow specifies another base branch.
+- Use a ticket-linked title: `IOANCVAPP-<n>: <imperative summary>`. Use `NO-TICKET:` only when no Jira ticket applies.
+- Keep each pull request focused on one ticket or closely related change; exclude unrelated changes.
+- Link the Jira story in the description and summarize how the changes address its description and acceptance criteria.
+- Describe the purpose, key implementation details, and relevant design decisions.
+- List the exact validation commands run and their results; identify skipped checks and why.
+- Call out migrations, configuration changes, compatibility concerns, deployment steps, and other relevant risks. Include screenshots for user-visible UI changes.
+- Create a draft pull request when the work or description is not ready for full review; otherwise create a regular pull request.
+
 ### Committing
 
 - Favor minimal explanatory comments in code; avoid verbose inline comments.
