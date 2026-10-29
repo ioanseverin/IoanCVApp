@@ -5,6 +5,7 @@
 - For planning a feature, story, or change, always use the `plan` skill (`.agents/skills/plan/SKILL.md`); save plans to `.agents/plans/`. This applies in plan mode too: follow the skill and save the plan in the repository, not only in the session.
 - For implementing a plan or an approved story, always use the `implement` skill (`.agents/skills/implement/SKILL.md`), including its branch, validation, and Jira steps.
 - For validation-only requests, use the `validate` skill (`.agents/skills/validate/SKILL.md`) to select and report repository-appropriate checks. During implementation, follow the validation steps in `implement`.
+- For ASP.NET Core Web API work, use the `dotnet-webapi` skill (`.agents/skills/dotnet-webapi/SKILL.md`) when adding or modifying endpoints, API request/response DTOs, OpenAPI documentation, API error handling, or `.http` request tests. Do not use it for general C# refactoring, EF Core data modeling/query optimization, or frontend work.
 - Keep `README.md` current with changes to setup, usage, features, behavior, configuration, or project structure. Assess README impact for every change, update it when relevant, and state when no update is needed.
 - Load the skill before starting the work, not after.
 
