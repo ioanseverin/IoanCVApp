@@ -50,7 +50,17 @@ Run the API:
 dotnet run --project backend/src/IoanCvApp.Api
 ```
 
-The API currently provides the application host and persistence wiring; content CRUD endpoints have not been implemented yet.
+The API currently provides the application host, persistence wiring, and a liveness endpoint; content CRUD endpoints have not been implemented yet.
+
+Check that the API is running (default development URL `http://localhost:5106`):
+
+```bash
+curl http://localhost:5106/health
+```
+
+It returns `200 OK` with `{"status":"Healthy"}`. The check only confirms the process is serving requests; it does not test the database. `backend/src/IoanCvApp.Api/IoanCvApp.Api.http` contains the same request for the VS Code REST Client.
+
+In the `Development` environment the API also serves its OpenAPI document at `http://localhost:5106/openapi/v1.json` and an interactive [Scalar](https://scalar.com) API reference at `http://localhost:5106/scalar` to browse and call endpoints. Both are disabled in other environments.
 
 ## SQLite database and migrations
 
