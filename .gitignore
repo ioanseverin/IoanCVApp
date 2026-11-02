@@ -5,6 +5,9 @@ obj/
 *.suo
 .vs/
 TestResults/
+*.db
+*.db-shm
+*.db-wal
 # Node
 node_modules/
 dist/

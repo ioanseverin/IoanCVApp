@@ -1,0 +1,5 @@
+@baseUrl = http://localhost:5106
+
+### Check API liveness
+GET {{baseUrl}}/health
+Accept: application/json
