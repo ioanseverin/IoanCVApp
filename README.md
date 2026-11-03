@@ -50,7 +50,17 @@ Run the API:
 dotnet run --project backend/src/IoanCvApp.Api
 ```
 
-The API currently provides the application host, persistence wiring, and a liveness endpoint; content CRUD endpoints have not been implemented yet.
+The API is built with ASP.NET Core controllers. It currently provides the application host, persistence wiring, a liveness endpoint and the anonymous public read endpoints below; admin (write) endpoints have not been implemented yet.
+
+### Public endpoints
+
+| Method | Path | Description |
+|---|---|---|
+| GET | `/api/public/profile` | About/CV profile; `404` with a `ProblemDetails` body when no profile exists |
+| GET | `/api/public/experience` | Experience entries in display order (`SortOrder`, then newest start date); `[]` when empty |
+| GET | `/api/public/projects` | Projects with tech stack and optional image URL; `[]` when empty |
+
+All three are anonymous. In `Development` the API applies migrations at startup and seeds non-sensitive sample content (only into empty tables), so these endpoints return data out of the box. Nothing is seeded in other environments.
 
 Check that the API is running (default development URL `http://localhost:5106`):
 
