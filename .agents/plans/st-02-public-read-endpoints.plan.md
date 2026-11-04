@@ -62,5 +62,5 @@ Smoke: run the API, `curl http://localhost:5106/api/public/projects`, open `/sca
 - [ ] All three endpoints return DTOs anonymously, with experience in display order.
 - [ ] Empty content gives `[]` or a 404 ProblemDetails, with no unhandled exception.
 - [ ] Documented and callable in Scalar (Development).
-- [ ] Sample data is non-sensitive and Development-only; no credentials.
+- [ ] Sample data is non-sensitive, exists only in the test project, and is used only with in-memory SQLite; no credentials are seeded.
 - [ ] Build, format and tests pass; README updated.
