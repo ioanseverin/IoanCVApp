@@ -66,7 +66,7 @@ public sealed class PublicEndpointTests
     public async Task Development_serves_seeded_content_and_documents_public_endpoints()
     {
         using var factory = new TestApiFactory("Development");
-        await factory.InitializeDatabaseAsync(TestDataSeeder.SeedAsync);
+        await factory.InitializeDatabaseAsync();
         using var client = factory.CreateClient();
 
         var profile = await client.GetFromJsonAsync<ProfileDto>("/api/public/profile");
