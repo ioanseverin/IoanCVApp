@@ -63,15 +63,16 @@ public sealed class PublicEndpointTests
     }
 
     [Fact]
-    public async Task Development_seeds_sample_content_and_documents_public_endpoints()
+    public async Task Development_serves_seeded_content_and_documents_public_endpoints()
     {
         using var factory = new TestApiFactory("Development");
+        await factory.InitializeDatabaseAsync(TestDataSeeder.SeedAsync);
         using var client = factory.CreateClient();
 
-        var profile = await client.GetAsync("/api/public/profile");
+        var profile = await client.GetFromJsonAsync<ProfileDto>("/api/public/profile");
         var openApi = await client.GetStringAsync("/openapi/v1.json");
 
-        Assert.Equal(HttpStatusCode.OK, profile.StatusCode);
+        Assert.Equal("Sample Developer", profile!.Name);
         Assert.Contains("/api/public/profile", openApi);
         Assert.Contains("/api/public/experience", openApi);
         Assert.Contains("/api/public/projects", openApi);

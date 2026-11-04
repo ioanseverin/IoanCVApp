@@ -5,7 +5,7 @@ After approval this is saved to `.agents/plans/st-02-public-read-endpoints.plan.
 Switch the API from minimal APIs to controllers, and add anonymous `GET /api/public/profile`, `/experience` and `/projects` as a `PublicController`. The existing `/health` endpoint becomes a `HealthController` with the same route and response. The public controller goes through a new `IContentService` in Application, which wraps the existing `IContentRepository` and `ToDto()` mapping. Empty content returns `[]` for the lists and `404 ProblemDetails` for the profile. Development-only sample data is seeded. Type: NEW_CAPABILITY plus REFACTOR (minimal APIs to controllers), complexity MEDIUM.
 
 ## Scope
-In: minimal-API-to-controller switch (`AddControllers`/`MapControllers`, `HealthController`, remove `Endpoints\`), `PublicController`, service layer, OpenAPI metadata (visible in Scalar), dev seeder, `.http` requests, integration tests, README.
+In: minimal-API-to-controller switch (`AddControllers`/`MapControllers`, `HealthController`, remove `Endpoints\`), `PublicController`, service layer, OpenAPI metadata (visible in Scalar), test-only seeder, `.http` requests, integration tests, README.
 Out: auth and admin (ST-03+), frontend, CORS, caching, pagination, entity or migration changes, global exception handler.
 
 ## Findings
@@ -25,7 +25,7 @@ Api references Application and Infrastructure. Infrastructure references Applica
 - CREATE `Api\Controllers\PublicController.cs` (`[Route("api/public")]`; profile returns `ActionResult<ProfileDto>` with 404 `ProblemDetails`; lists return `ActionResult<IReadOnlyList<…>>`; all take a `CancellationToken`)
 - DELETE `Api\Endpoints\HealthEndpoints.cs` (and the `Endpoints` folder)
 - UPDATE `Api\Program.cs` (`AddControllers`, `MapControllers`, `AddApplication`, Development migrate and seed; remove `MapHealth`)
-- CREATE `Infrastructure\Persistence\DevelopmentDataSeeder.cs` (idempotent; only when empty; no credentials)
+- CREATE `tests\IoanCvApp.Api.Tests\TestDataSeeder.cs` (test-only sample data; no credentials)
 - UPDATE `Api\IoanCvApp.Api.http`, `README.md`
 - CREATE `tests\IoanCvApp.Api.Tests\PublicEndpointTests.cs`
 
@@ -33,7 +33,7 @@ Api references Application and Infrastructure. Infrastructure references Applica
 1. Service layer, then build.
 2. Switch to controllers: `AddControllers()`/`MapControllers()`, port `/health` to `HealthController`, delete `HealthEndpoints`, and run the existing 5 tests to confirm no behaviour change.
 3. `PublicController` actions (`GetPublicProfile`, `GetPublicExperience`, `GetPublicProjects`) with `ProducesResponseType` metadata.
-4. Dev seeder: in Development only, `MigrateAsync` then seed. Smoke test with curl.
+4. Test data seeder: seed non-sensitive sample data only from the test project. The API does not automatically migrate or seed a developer's database.
 5. Tests with in-memory SQLite override:
    - Empty DB: lists return `[]`, profile returns 404 problem+json.
    - Seeded DB: profile fields, experience order, projects tech stack and nullable image, ISO `DateOnly`, anonymous access.
@@ -44,8 +44,8 @@ Api references Application and Infrastructure. Infrastructure references Applica
 ## Risks
 - The controller switch could change `/health` behaviour or JSON naming: the existing tests guard it, and the System.Text.Json camelCase default is the same.
 - `/health` is outside `/api`, so it needs an explicit `[Route("health")]`.
-- Seeding touches a real DB: Development only, only when empty, never credentials.
-- `MigrateAsync` is not called in Production; deployment migration is a separate story.
+- Sample seeding is confined to the test project and in-memory database fixture; it cannot modify a developer or production database.
+- Migrations are applied separately using the documented EF tool commands.
 - Test isolation: per-test in-memory SQLite.
 - Application DTOs double as the wire contract; revisit if they diverge.
 
