@@ -3,3 +3,15 @@
 ### Check API liveness
 GET {{baseUrl}}/health
 Accept: application/json
+
+### Get public profile (404 ProblemDetails when no profile exists)
+GET {{baseUrl}}/api/public/profile
+Accept: application/json
+
+### Get public experience entries in display order
+GET {{baseUrl}}/api/public/experience
+Accept: application/json
+
+### Get public projects
+GET {{baseUrl}}/api/public/projects
+Accept: application/json
