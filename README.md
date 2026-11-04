@@ -60,7 +60,7 @@ The API is built with ASP.NET Core controllers. It currently provides the applic
 | GET | `/api/public/experience` | Experience entries in display order (`SortOrder`, then newest start date); `[]` when empty |
 | GET | `/api/public/projects` | Projects with tech stack and optional image URL; `[]` when empty |
 
-All three are anonymous. The endpoints read the configured database and return the documented empty or not-found response when it has no content. The API does not seed sample data or apply migrations automatically; apply migrations using the commands below. Sample content is created only by the automated test suite.
+All three are anonymous. In `Development`, the API applies pending migrations at startup and uses `TestDataSeeder` from Infrastructure to add sample content to each empty content table. The SQLite database is persistent, so seeded rows remain between runs; remove or edit sample rows before entering real content. This seeding and automatic migration are disabled outside `Development`. In other environments, apply migrations using the commands below.
 
 Check that the API is running (default development URL `http://localhost:5106`):
 

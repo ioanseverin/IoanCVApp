@@ -1,5 +1,6 @@
 using IoanCvApp.Application;
 using IoanCvApp.Infrastructure;
+using IoanCvApp.Infrastructure.Persistence;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,10 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
+
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await TestDataSeeder.SeedAsync(db);
 }
 
 app.UseHttpsRedirection();

@@ -1,25 +1,26 @@
 using IoanCvApp.Domain;
-using IoanCvApp.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
-namespace IoanCvApp.Api.Tests;
+namespace IoanCvApp.Infrastructure.Persistence;
 
 public static class TestDataSeeder
 {
-    public static async Task SeedAsync(AppDbContext db)
+    public static async Task SeedAsync(AppDbContext db, CancellationToken ct = default)
     {
-        if (!await db.Profiles.AnyAsync())
+        await db.Database.MigrateAsync(ct);
+
+        if (!await db.Profiles.AnyAsync(ct))
         {
             db.Profiles.Add(new Profile
             {
                 Name = "Sample Developer",
                 Headline = "Software Engineer",
-                Bio = "Sample profile used for tests.",
+                Bio = "Sample profile used for local development.",
                 Skills = ["C#", ".NET", "SQL"]
             });
         }
 
-        if (!await db.ExperienceEntries.AnyAsync())
+        if (!await db.ExperienceEntries.AnyAsync(ct))
         {
             db.ExperienceEntries.AddRange(
                 new ExperienceEntry
@@ -43,17 +44,17 @@ public static class TestDataSeeder
                 });
         }
 
-        if (!await db.Projects.AnyAsync())
+        if (!await db.Projects.AnyAsync(ct))
         {
             db.Projects.Add(new Project
             {
                 Name = "IoanCvApp",
-                Description = "Sample project entry for tests.",
+                Description = "Sample project entry for local development.",
                 TechStack = ["ASP.NET Core", "EF Core", "React"],
                 SortOrder = 1
             });
         }
 
-        await db.SaveChangesAsync();
+        await db.SaveChangesAsync(ct);
     }
 }

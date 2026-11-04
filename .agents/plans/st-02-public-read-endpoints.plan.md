@@ -5,7 +5,7 @@ After approval this is saved to `.agents/plans/st-02-public-read-endpoints.plan.
 Switch the API from minimal APIs to controllers, and add anonymous `GET /api/public/profile`, `/experience` and `/projects` as a `PublicController`. The existing `/health` endpoint becomes a `HealthController` with the same route and response. The public controller goes through a new `IContentService` in Application, which wraps the existing `IContentRepository` and `ToDto()` mapping. Empty content returns `[]` for the lists and `404 ProblemDetails` for the profile. Development-only sample data is seeded. Type: NEW_CAPABILITY plus REFACTOR (minimal APIs to controllers), complexity MEDIUM.
 
 ## Scope
-In: minimal-API-to-controller switch (`AddControllers`/`MapControllers`, `HealthController`, remove `Endpoints\`), `PublicController`, service layer, OpenAPI metadata (visible in Scalar), test-only seeder, `.http` requests, integration tests, README.
+In: minimal-API-to-controller switch (`AddControllers`/`MapControllers`, `HealthController`, remove `Endpoints\`), `PublicController`, service layer, OpenAPI metadata (visible in Scalar), Development-only seeder in Infrastructure, `.http` requests, integration tests, README.
 Out: auth and admin (ST-03+), frontend, CORS, caching, pagination, entity or migration changes, global exception handler.
 
 ## Findings
@@ -25,7 +25,7 @@ Api references Application and Infrastructure. Infrastructure references Applica
 - CREATE `Api\Controllers\PublicController.cs` (`[Route("api/public")]`; profile returns `ActionResult<ProfileDto>` with 404 `ProblemDetails`; lists return `ActionResult<IReadOnlyList<…>>`; all take a `CancellationToken`)
 - DELETE `Api\Endpoints\HealthEndpoints.cs` (and the `Endpoints` folder)
 - UPDATE `Api\Program.cs` (`AddControllers`, `MapControllers`, `AddApplication`, Development migrate and seed; remove `MapHealth`)
-- CREATE `tests\IoanCvApp.Api.Tests\TestDataSeeder.cs` (test-only sample data; no credentials)
+- CREATE `Infrastructure\Persistence\TestDataSeeder.cs` (Development-only sample data; no credentials)
 - UPDATE `Api\IoanCvApp.Api.http`, `README.md`
 - CREATE `tests\IoanCvApp.Api.Tests\PublicEndpointTests.cs`
 
@@ -33,7 +33,7 @@ Api references Application and Infrastructure. Infrastructure references Applica
 1. Service layer, then build.
 2. Switch to controllers: `AddControllers()`/`MapControllers()`, port `/health` to `HealthController`, delete `HealthEndpoints`, and run the existing 5 tests to confirm no behaviour change.
 3. `PublicController` actions (`GetPublicProfile`, `GetPublicExperience`, `GetPublicProjects`) with `ProducesResponseType` metadata.
-4. Test data seeder: seed non-sensitive sample data only from the test project. The API does not automatically migrate or seed a developer's database.
+4. Development seeder: in `IsDevelopment()` only, apply pending migrations and seed non-sensitive sample data using Infrastructure's `TestDataSeeder`; it adds content only to empty tables. Tests must use an in-memory SQLite database and verify Production does not seed.
 5. Tests with in-memory SQLite override:
    - Empty DB: lists return `[]`, profile returns 404 problem+json.
    - Seeded DB: profile fields, experience order, projects tech stack and nullable image, ISO `DateOnly`, anonymous access.
@@ -44,8 +44,8 @@ Api references Application and Infrastructure. Infrastructure references Applica
 ## Risks
 - The controller switch could change `/health` behaviour or JSON naming: the existing tests guard it, and the System.Text.Json camelCase default is the same.
 - `/health` is outside `/api`, so it needs an explicit `[Route("health")]`.
-- Sample seeding is confined to the test project and in-memory database fixture; it cannot modify a developer or production database.
-- Migrations are applied separately using the documented EF tool commands.
+- Development seeding modifies the configured Development database; it must remain gated by `IsDevelopment()` and add sample data only to empty tables.
+- Production does not run startup migrations or seed data. Migrations there are applied separately using the documented EF tool commands.
 - Test isolation: per-test in-memory SQLite.
 - Application DTOs double as the wire contract; revisit if they diverge.
 
@@ -62,5 +62,5 @@ Smoke: run the API, `curl http://localhost:5106/api/public/projects`, open `/sca
 - [ ] All three endpoints return DTOs anonymously, with experience in display order.
 - [ ] Empty content gives `[]` or a 404 ProblemDetails, with no unhandled exception.
 - [ ] Documented and callable in Scalar (Development).
-- [ ] Sample data is non-sensitive, exists only in the test project, and is used only with in-memory SQLite; no credentials are seeded.
+- [ ] Development-only sample seeding uses Infrastructure's `TestDataSeeder`; tests override persistence with in-memory SQLite; no credentials are seeded.
 - [ ] Build, format and tests pass; README updated.
