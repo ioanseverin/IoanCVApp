@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Http.Json;
 using IoanCvApp.Application.Dtos;
 using IoanCvApp.Domain;
+using IoanCvApp.Infrastructure.Persistence;
 
 namespace IoanCvApp.Api.Tests;
 
@@ -60,6 +61,22 @@ public sealed class PublicEndpointTests
         Assert.Equal(["ASP.NET Core", "EF Core"], projects![0].TechStack);
         Assert.Null(projects[0].ImageUrl);
         Assert.Equal("https://example.com/p2.png", projects[1].ImageUrl);
+    }
+
+    [Fact]
+    public async Task Test_data_seeder_populates_the_in_memory_database()
+    {
+        using var factory = new TestApiFactory();
+        await factory.InitializeDatabaseAsync(db => TestDataSeeder.SeedAsync(db));
+        using var client = factory.CreateClient();
+
+        var profile = await client.GetFromJsonAsync<ProfileDto>("/api/public/profile");
+        var experience = await client.GetFromJsonAsync<List<ExperienceEntryDto>>("/api/public/experience");
+        var projects = await client.GetFromJsonAsync<List<ProjectDto>>("/api/public/projects");
+
+        Assert.Equal("Sample Developer", profile!.Name);
+        Assert.Equal(2, experience!.Count);
+        Assert.Single(projects!);
     }
 
     [Fact]

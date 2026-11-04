@@ -7,8 +7,6 @@ public static class TestDataSeeder
 {
     public static async Task SeedAsync(AppDbContext db, CancellationToken ct = default)
     {
-        await db.Database.MigrateAsync(ct);
-
         if (!await db.Profiles.AnyAsync(ct))
         {
             db.Profiles.Add(new Profile
