@@ -6,6 +6,7 @@
 - For implementing a plan or an approved story, always use the `implement` skill (`.agents/skills/implement/SKILL.md`), including its branch, validation, and Jira steps.
 - For validation-only requests, use the `validate` skill (`.agents/skills/validate/SKILL.md`) to select and report repository-appropriate checks. During implementation, follow the validation steps in `implement`.
 - For ASP.NET Core Web API work, use the `dotnet-webapi` skill (`.agents/skills/dotnet-webapi/SKILL.md`) when adding or modifying endpoints, API request/response DTOs, OpenAPI documentation, API error handling, or `.http` request tests. Do not use it for general C# refactoring, EF Core data modeling/query optimization, or frontend work.
+- Load the matching C# skill when relevant: `dotnet-best-practices` (`.agents/skills/dotnet-best-practices/SKILL.md`) for general C# implementation or review, `csharp-async` (`.agents/skills/csharp-async/SKILL.md`) for asynchronous C# work, `csharp-docs` (`.agents/skills/csharp-docs/SKILL.md`) for XML documentation, and `csharp-xunit` (`.agents/skills/csharp-xunit/SKILL.md`) for xUnit tests. Load only the skills relevant to the task.
 - Keep `README.md` current with changes to setup, usage, features, behavior, configuration, or project structure. Assess README impact for every change, update it when relevant, and state when no update is needed.
 - Load the skill before starting the work, not after.
 
