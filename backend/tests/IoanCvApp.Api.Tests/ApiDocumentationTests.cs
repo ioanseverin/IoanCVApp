@@ -14,7 +14,9 @@ public sealed class ApiDocumentationTests
         var ui = await client.GetAsync("/scalar/v1");
 
         Assert.Equal(HttpStatusCode.OK, document.StatusCode);
-        Assert.Contains("/health", await document.Content.ReadAsStringAsync());
+        var openApi = await document.Content.ReadAsStringAsync();
+        Assert.Contains("/health", openApi);
+        Assert.Contains("/api/auth/login", openApi);
         Assert.Equal(HttpStatusCode.OK, ui.StatusCode);
     }
 
