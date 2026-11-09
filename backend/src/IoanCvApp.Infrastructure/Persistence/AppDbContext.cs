@@ -12,6 +12,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<ExperienceEntry> ExperienceEntries => Set<ExperienceEntry>();
     public DbSet<Project> Projects => Set<Project>();
 
+    /// <summary>Gets the persisted administrator accounts.</summary>
+    public DbSet<AdminUser> AdminUsers => Set<AdminUser>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Profile>(b =>
@@ -35,6 +38,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             b.Property(x => x.Name).IsRequired().HasMaxLength(200);
             b.Property(x => x.Description).IsRequired();
             b.Property(x => x.TechStack).AsJsonStringList();
+        });
+
+        modelBuilder.Entity<AdminUser>(b =>
+        {
+            b.Property(x => x.Username).IsRequired().HasMaxLength(100);
+            b.Property(x => x.PasswordHash).IsRequired();
+            b.HasIndex(x => x.Username).IsUnique();
         });
     }
 }
