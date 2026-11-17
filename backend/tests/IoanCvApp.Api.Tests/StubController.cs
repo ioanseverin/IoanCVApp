@@ -6,7 +6,7 @@ namespace IoanCvApp.Api.Tests;
 [ApiController]
 [Route("test/protected")]
 [Authorize(Policy = "Admin")]
-public sealed class ProtectedTestController : ControllerBase
+public sealed class StubController : ControllerBase
 {
     [HttpGet]
     public IActionResult Get() => Ok(new { authorized = true });

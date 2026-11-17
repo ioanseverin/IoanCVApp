@@ -57,7 +57,7 @@ public sealed class TestApiFactory(
         {
             services
                 .AddControllers()
-                .AddApplicationPart(typeof(ProtectedTestController).Assembly);
+                .AddApplicationPart(typeof(StubController).Assembly);
 
             var toRemove = services
                 .Where(d => d.ServiceType == typeof(AppDbContext)
