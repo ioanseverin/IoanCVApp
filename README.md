@@ -83,9 +83,12 @@ dotnet user-secrets set "Authentication:Admin:Username" "your-admin-username" --
 dotnet user-secrets set "Authentication:Admin:Password" "<your-admin-password>" --project backend\src\IoanCvApp.Api
 dotnet user-secrets set "Authentication:Jwt:Issuer" "IoanCvApp" --project backend\src\IoanCvApp.Api
 dotnet user-secrets set "Authentication:Jwt:Audience" "IoanCvApp" --project backend\src\IoanCvApp.Api
-$signingKey = [Convert]::ToBase64String([System.Security.Cryptography.RandomNumberGenerator]::GetBytes(32))
+$keyBytes = New-Object byte[] 32
+$rng = [System.Security.Cryptography.RandomNumberGenerator]::Create()
+try { $rng.GetBytes($keyBytes) } finally { $rng.Dispose() }
+$signingKey = [Convert]::ToBase64String($keyBytes)
 dotnet user-secrets set "Authentication:Jwt:SigningKey" $signingKey --project backend\src\IoanCvApp.Api
-Remove-Variable signingKey
+Remove-Variable signingKey, keyBytes, rng
 dotnet user-secrets set "Cors:AllowedOrigins:0" "http://localhost:5173" --project backend\src\IoanCvApp.Api
 ```
 
