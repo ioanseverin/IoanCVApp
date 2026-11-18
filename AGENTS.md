@@ -21,6 +21,12 @@
 - Call out migrations, configuration changes, compatibility concerns, deployment steps, and other relevant risks. Include screenshots for user-visible UI changes.
 - Create a draft pull request when the work or description is not ready for full review; otherwise create a regular pull request.
 
+### Pull Request Review Comments
+
+- Always answer relevant PR review comments for the current work in the corresponding GitHub PR thread. A reply in the chat or local feedback panel does not count as a PR reply.
+- For requested changes, implement and validate them before replying with a concise summary. For questions or feedback that do not require code changes, reply directly with the rationale or answer.
+- Verify that the response appears in the intended PR thread; do not mark a comment resolved unless it has been addressed.
+
 ### Committing
 
 - Favor minimal explanatory comments in code; avoid verbose inline comments.

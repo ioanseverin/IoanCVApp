@@ -1,5 +1,8 @@
 using IoanCvApp.Application.Abstractions;
+using IoanCvApp.Domain;
+using IoanCvApp.Infrastructure.Authentication;
 using IoanCvApp.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +20,10 @@ public static class DependencyInjection
 
         services.AddDbContext<AppDbContext>(o => o.UseSqlite(connectionString));
         services.AddScoped<IContentRepository, ContentRepository>();
+        services.AddScoped<IAdminUserRepository, AdminUserRepository>();
+        services.AddScoped<IPasswordHashService, IdentityPasswordHashService>();
+        services.AddScoped<IPasswordHasher<AdminUser>, PasswordHasher<AdminUser>>();
+        services.AddScoped<AdminAccountSeeder>();
         return services;
     }
 }

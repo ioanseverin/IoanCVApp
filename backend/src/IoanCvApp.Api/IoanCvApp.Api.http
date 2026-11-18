@@ -15,3 +15,21 @@ Accept: application/json
 ### Get public projects
 GET {{baseUrl}}/api/public/projects
 Accept: application/json
+
+### Log in as the configured administrator
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "<configured-admin-username>",
+  "password": "<configured-admin-password>"
+}
+
+### Invalid administrator credentials return a generic 401
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "<configured-admin-username>",
+  "password": "<incorrect-password>"
+}
